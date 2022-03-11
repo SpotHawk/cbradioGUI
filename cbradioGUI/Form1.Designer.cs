@@ -136,6 +136,7 @@ namespace cbradioGUI
             this.bt_mentes.TabIndex = 5;
             this.bt_mentes.Text = "Mentés";
             this.bt_mentes.UseVisualStyleBackColor = true;
+            this.bt_mentes.Click += new System.EventHandler(this.bt_mentes_Click);
             // 
             // tb_fajlba
             // 
@@ -202,6 +203,7 @@ namespace cbradioGUI
             this.tb_kereses.TabIndex = 4;
             this.tb_kereses.Text = "Keresés";
             this.tb_kereses.UseVisualStyleBackColor = true;
+            this.tb_kereses.Click += new System.EventHandler(this.tb_kereses_Click);
             // 
             // Form1
             // 
@@ -212,6 +214,7 @@ namespace cbradioGUI
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nur_adas)).EndInit();
