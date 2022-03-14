@@ -39,6 +39,7 @@ namespace cbradioGUI
             catch (IOException er)
             {
                 MessageBox.Show(er.Message);
+                throw;
             }
 
             List<string> nevek = new List<string>();
@@ -54,11 +55,28 @@ namespace cbradioGUI
 
         private void bt_mentes_Click(object sender, EventArgs e)
         {
-            if (comb_nev.SelectedIndex!=-1 && tb_ido.Text!="")
+            int ora=0;
+            int perc=0;
+
+            if (comb_nev.SelectedIndex!=-1 && tb_ido.Text.Length>2 && tb_ido.Text.Length<6 && tb_ido.Text.Contains(":") && tb_ido.Text.IndexOf(':')!=0 || tb_ido.Text.IndexOf(':') !=tb_ido.Text.Length-1)
             {
-                int ora = int.Parse(tb_ido.Text.Substring(0, 2));
-                int perc = int.Parse(tb_ido.Text.Substring(3,2));
-                adatok.Add(new CBAdas(ora,perc,(int)nur_adas.Value,comb_nev.Text));
+                try
+                {
+                    ora = int.Parse(tb_ido.Text.Substring(0, tb_ido.Text.IndexOf(':')));
+                    perc = int.Parse(tb_ido.Text.Substring(tb_ido.Text.IndexOf(':') + 1, tb_ido.Text.Length - (ora.ToString().Length + 1)));
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show("Hibás adatbevitel!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                if (ora > -1 && ora < 24 && perc>-1 && perc<60)
+                {
+                    adatok.Add(new CBAdas(ora, perc, (int)nur_adas.Value, comb_nev.Text));
+                }
+                else
+                {
+                    MessageBox.Show("Hibás adatbevitel!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
@@ -68,7 +86,8 @@ namespace cbradioGUI
 
         private void tb_kereses_Click(object sender, EventArgs e)
         {
-            string keresett = tb_kereses.Text;
+            listb_adatok.Items.Clear();
+            string keresett = tb_nev.Text;
             int i = 0;
             while (i<adatok.Count && adatok[i].SoforNev!=keresett)
             {
@@ -80,7 +99,7 @@ namespace cbradioGUI
             }
             else if (i<adatok.Count)
             {
-                MessageBox.Show(adatok[i].SoforNev);
+                lb_adatlist.Text = $"{keresett} adásai";
                 foreach (CBAdas item in adatok)
                 {
                     if (item.SoforNev == keresett)
@@ -93,6 +112,11 @@ namespace cbradioGUI
             {
                 MessageBox.Show("Nem található a keresendő személyt!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void tb_fajlba_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
