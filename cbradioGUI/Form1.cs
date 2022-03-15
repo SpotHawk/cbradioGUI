@@ -15,6 +15,7 @@ namespace cbradioGUI
     {
         List<CBAdas> adatok = new List<CBAdas>();
         string fajl = "cb.txt";
+        int plussz = 0;
 
         public Form1()
         {
@@ -57,8 +58,7 @@ namespace cbradioGUI
         {
             int ora=0;
             int perc=0;
-
-            if (comb_nev.SelectedIndex!=-1 && tb_ido.Text.Length>2 && tb_ido.Text.Length<6 && tb_ido.Text.Contains(":") && tb_ido.Text.IndexOf(':')!=0 || tb_ido.Text.IndexOf(':') !=tb_ido.Text.Length-1)
+            if (comb_nev.SelectedIndex!=-1 && tb_ido.Text.Length>2 && tb_ido.Text.Contains(':') && tb_ido.Text.Length<6 &&  (tb_ido.Text.IndexOf(':')!=0 || tb_ido.Text.IndexOf(':') !=tb_ido.Text.Length-1))
             {
                 try
                 {
@@ -72,6 +72,9 @@ namespace cbradioGUI
                 if (ora > -1 && ora < 24 && perc>-1 && perc<60)
                 {
                     adatok.Add(new CBAdas(ora, perc, (int)nur_adas.Value, comb_nev.Text));
+                    plussz++;
+                    comb_nev.SelectedIndex = -1;
+                    tb_ido.Text = "";
                 }
                 else
                 {
@@ -116,7 +119,24 @@ namespace cbradioGUI
 
         private void tb_fajlba_Click(object sender, EventArgs e)
         {
-
+            if (plussz!=0)
+            {
+                try
+                {
+                    using (StreamWriter kiir = File.AppendText(fajl))
+                    {
+                        for (int i = adatok.Count - plussz; i < adatok.Count; i++)
+                        {
+                            kiir.WriteLine($"{adatok[i].AdasIdejeOra};{adatok[i].AdasIdejePerc};{adatok[i].AdasSzam};{adatok[i].SoforNev}");
+                        }
+                    }
+                }
+                catch (IOException er)
+                {
+                    MessageBox.Show(er.Message);
+                }
+                plussz = 0;
+            }
         }
     }
 }
